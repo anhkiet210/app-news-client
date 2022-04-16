@@ -134,27 +134,54 @@ const ChiTietTin = () => {
     const [TacGia, setTacGia] = useState()
     const [category, setCategory] = useState([])
     const [loading, setLoading] = useState(false)
-    const different_news = this.state.posts.filter((subpost) => (subpost.id !== this.state.post.id));
-    const related_news = different_news.filter((subpost) => (subpost.idChuDe === this.state.post.idChuDe));
-    const current_tacgia = this.state.TacGia.filter((subtacgia) => (subtacgia.id === this.state.post.TacGia))
+    const different_news = post && posts.filter((subpost) => (subpost.id !== post.id));
+    const related_news = different_news && different_news.filter((subpost) => (subpost.idChuDe === post.idChuDe));
+    const current_tacgia = TacGia && TacGia.filter((subtacgia) => (subtacgia.id === post.TacGia))
 
     useEffect(() => {
-        loadTacGia = async () => {
+        const loadPost = async (url) => {
             var requestOptions = {
                 method: 'GET',
                 redirect: 'follow'
             };
+            setLoading(true)
+            fetch(`https://app-news-laravel.herokuapp.com/api/Post/${params.id}`, requestOptions)
+                .then(response => response.json())
+                .then(result => { 
+                    setPost(result) 
+                    setLoading(false)
+                })
+                .catch(error => console.log('error', error))
+                .finally(() => {
+                    setLoading(false)
+                })
+        }
+        loadPost()
+    }, [])
 
+    useEffect(() => {
+        const loadTacGia = async () => {
+            var requestOptions = {
+                method: 'GET',
+                redirect: 'follow'
+            };
+            setLoading(true)
             await fetch("https://app-news-laravel.herokuapp.com/api/getAll-user-profile/", requestOptions)
                 .then(response => response.json())
-                .then(result => { setTacGia(result) })
-                .catch(error => console.log('error', error));
+                .then(result => { 
+                    setTacGia(result) 
+                    setLoading(false)
+                })
+                .catch(error => console.log('error', error))
+                .finally( () => {
+                    setLoading(false)
+                })
         }
         loadTacGia()
     }, [])
 
     useEffect(() => {
-        loadCategory = () => {
+        const loadCategory = () => {
             var requestOptions = {
                 method: 'GET',
                 redirect: 'follow'
@@ -162,13 +189,15 @@ const ChiTietTin = () => {
             setLoading(true)
             fetch("https://app-news-laravel.herokuapp.com/api/Category", requestOptions)
                 .then(response => response.json())
-                .then(result => { 
-                    setCategory(result) 
+                .then(result => {
+                    setCategory(result)
                     setLoading(false)
                 })
                 .catch(error => console.log('error', error))
-                .finally(() => {setLoading(false)})
+                .finally(() => { setLoading(false) })
         }
+
+        loadCategory()
     }, [])
 
     // get posts
@@ -186,12 +215,12 @@ const ChiTietTin = () => {
                     setLoading(false)
                 })
                 .catch(error => console.log('error', error))
-                .finally( () => setLoading(false))
+                .finally(() => setLoading(false))
         }
         fetchDate()
     }, [])
 
-    return Loading ? <Loading /> :(
+    return Loading ? <Loading /> : (
         <React.Fragment>
             <Header />
             <Menu />

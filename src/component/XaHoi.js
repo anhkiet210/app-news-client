@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import BigNewsItem from './BigNewsItem';
 import Footer from './Footer';
 import Header from './Header';
