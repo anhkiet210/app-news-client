@@ -8,6 +8,7 @@ import NewsEventItem from './NewsEventItem';
 import SmallContentItemCol3 from './SmallContentItemCol3';
 import SmallContentItemCol4 from './SmallContentItemCol4';
 import Loading from './Loading';
+import VerticalContent from './VerticalContent';
 
 // class Home extends Component {
 //     constructor(props) {
@@ -210,7 +211,6 @@ const Home = () => {
     const [post, setPost] = useState([])
     const [category, setCategory] = useState([])
     const post_approved = post && post.filter((item) => item.TrangThai === 1)
-    var a 
     const [loading, setLoading] =useState(false)
 
     // get posts
@@ -220,37 +220,40 @@ const Home = () => {
                 method: 'GET',
                 redirect: 'follow'
             };
-
-            await fetch("https://app-news-laravel.herokuapp.com/api/Post", requestOptions)
+            setLoading(true)
+            await fetch("http://127.0.0.1:8000/api/Post", requestOptions)
+            // await fetch("https://app-news-laravel.herokuapp.com/api/Post", requestOptions)
                 .then(response => response.json())
                 .then(result => {
                     setPost(result)
                 })
-                .catch(error => console.log('error', error));
+                .catch(error => console.log('error', error))
+                .finally(() => {setLoading(false)})
        }
        fetchDate()
     }, [])
 
     //get category
-    useEffect(() => {
-        const fetchDate = async () => {
-            var requestOptions = {
-                method: 'GET',
-                redirect: 'follow'
-            };
-            setLoading(true)
-            await fetch("https://app-news-laravel.herokuapp.com/api/Category", requestOptions)
-                .then(response => response.json())
-                .then(result => {
-                    setCategory(result)
-                })
-                .catch(error => console.log('error', error))
-                .finally(() => {
-                    setLoading(false)
-                })
-        }
-        fetchDate()
-    }, [])
+    // useEffect(() => {
+    //     const fetchDate = async () => {
+    //         var requestOptions = {
+    //             method: 'GET',
+    //             redirect: 'follow'
+    //         };
+    //         setLoading(true)
+    //         await fetch("http://127.0.0.1:8000/api/Category", requestOptions)
+    //             .then(response => response.json())
+    //             .then(result => {
+    //                 setCategory(result)
+    //                 setLoading(false)
+    //             })
+    //             .catch(error => console.log('error', error))
+    //             .finally(() => {
+    //                 setLoading(false)
+    //             })
+    //     }
+    //     fetchDate()
+    // }, [])
     return loading ? <Loading /> : (
         <div>
             <Header></Header>
@@ -329,16 +332,15 @@ const Home = () => {
                         </div>
                         {/* end content-left */}
                         <div className="col-4 content-right">
-                            {
+                            {/* {
                                 category.slice(0, 6).map((subcategory) => {
                                     if (subcategory.TrangThaiCD === 1) {
                                         return (
                                             <div className="list-news-event" key={subcategory.id}>
                                                 <h3>{subcategory.TenChuDe}</h3>
                                                 <ul>
-                                                    {/* {
                                                         {
-                                                            a = post_approved.filter((subpost_approved) => (subpost_approved.idChuDe === subcategory.id)),
+                                                            a = post_approved.filter((subpost_approved) => (subpost_approved.idChuDe === subcategory.id))
                                                             a = a.reverse()
 
                                                             a.slice(0, 6).map( item => {
@@ -351,15 +353,26 @@ const Home = () => {
                                                                         />
                                                                     )
                                                                 }
-                                                            })  
+                                                            }) 
                                                         }
-                                                            
-                                                    } */}
                                                 </ul>
                                             </div>
                                         )
                                     }
                                 })
+                            } */}
+                            {
+                                post_approved.reverse()
+                                .slice(0, 5)
+                                .map((sub) => (
+                                    <VerticalContent
+                                        key={sub.id}
+                                        idpost={sub.id}
+                                        tieude={sub.TieuDe}
+                                        trichdan={sub.TrichDan}
+                                        anh={sub.Anh}
+                                    />
+                                ))
                             }
                         </div>
                     </div>

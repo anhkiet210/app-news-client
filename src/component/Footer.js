@@ -25,10 +25,10 @@ class Footer extends Component {
                     </p>
                     <div className="follow-us">
                       <label>Theo dõi chúng tôi trên:</label>
-                      <Link to={true}>
+                      <Link to={"/"}>
                         <i className="fab fa-facebook"></i>
                       </Link>
-                      <Link to={true}>
+                      <Link to={"/"}>
                         <i className="fab fa-youtube"></i>
                       </Link>
                     </div>

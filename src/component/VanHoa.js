@@ -24,7 +24,7 @@ const VanHoa = () => {
                 redirect: 'follow'
             };
             setLoading(true)
-            await fetch("https://app-news-laravel.herokuapp.com/api/Post", requestOptions)
+            await fetch("http://127.0.0.1:8000/api/Post", requestOptions)
                 .then(response => response.json())
                 .then(result => {
                     setPost(result)
